@@ -119,7 +119,7 @@ int main()
     int num_iter = 0;
 
     double *A = malloc(nx * ny * sizeof(double));
-	double *b = malloc(n * sizeof(double));
+    double *b = malloc(n * sizeof(double));
     double *x = malloc(n * sizeof(double));
     double *xn = malloc(n * sizeof(double));
     double *xn1 = malloc(n * sizeof(double));

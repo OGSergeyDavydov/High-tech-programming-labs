@@ -2,14 +2,21 @@
 #include <stdlib.h>
 #include <math.h>
 
-void set_matrix_element(double *matrix, double value, int size, int i, int j)
+typedef struct
 {
-    matrix[i*size + j] = value;
+    int nx;
+    int ny;
+    double *matrix;
+} matrix;
+
+void set_matrix_element(matrix mat, double value, int i, int j)
+{
+    mat.matrix[i*mat.nx + j] = value;
 }
 
-double get_matrix_element(double *matrix, int size, int i, int j)
+double get_matrix_element(matrix mat, int i, int j)
 {
-    return matrix[i*size + j];
+    return mat.matrix[i*mat.nx + j];
 }
 
 double dot_product(double *vector_a, double *vector_b, int size)
@@ -17,25 +24,21 @@ double dot_product(double *vector_a, double *vector_b, int size)
     double result = 0.0;
 
     for (int i = 0; i < size; i++)
-    {
         result += vector_a[i] * vector_b[i];
-    }
 
     return result;
 }
 
-void matrix_multiplication(double *matrix, double *vector, double *result, int size)
+void matrix_multiplication(matrix mat, double *vector, double *result)
 {
-    double *temp = malloc(size * sizeof(double));
+    double *temp = malloc(mat.nx * sizeof(double));
 
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < mat.nx; i++)
     {
-        for(int j = 0; j < size; j++)
-        {
-            temp[j] = get_matrix_element(matrix, size, i, j);
-        }
+        for(int j = 0; j < mat.ny; j++)
+            temp[j] = get_matrix_element(mat, i, j);
 
-        double r = dot_product(temp, vector, size);
+        double r = dot_product(temp, vector, mat.nx);
         result[i] = r;
     } 
 }
@@ -43,33 +46,25 @@ void matrix_multiplication(double *matrix, double *vector, double *result, int s
 void scalar_multiplication(double *vector, double scalar, int size)
 {
     for (int i = 0; i < size; i++)
-    {
         vector[i] *= scalar;
-    }
 }
 
 void subtract_vectors(double *vector_a, double *vector_b, double *result, int size)
 {
     for (int i = 0; i < size; i++)
-    {
         result[i] = vector_a[i] - vector_b[i];
-    }
 }
 
 void array_abs(double *array, int size)
 {
     for (int i = 0; i < size; i++)
-    {
         array[i] = fabs(array[i]);
-    }
 }
 
 void print_array(double *array, int size)
 {   
     for (int i = 0; i < size; i++)
-    {
         printf("%g ", array[i]);  
-    }
     printf("\n");
 }
 
@@ -80,9 +75,7 @@ double find_max_element(double *array, int size)
     for (int i = 1; i < size; i++)
     {
         if (array[i] > max)
-        {
             max = array[i];
-        }
     }
 
     return max;
@@ -91,19 +84,15 @@ double find_max_element(double *array, int size)
 void swap_array_elements(double *new_array, double *initial_array, int size)
 {
     for (int i = 0; i < size; i++)
-    {
         new_array[i] = initial_array[i];
-    }
 }
 
-void print_matrix(double *matrix, int nx, int ny)
+void print_matrix(matrix mat)
 {
-    for (int i = 0; i < nx; i++)
+    for (int i = 0; i < mat.nx; i++)
     {
-        for (int j = 0; j < ny; j++)
-        {
-            printf("%g ", get_matrix_element(matrix, ny, i, j));
-        }
+        for (int j = 0; j < mat.ny; j++)
+            printf("%g ", get_matrix_element(mat, i, j));
         printf("\n");   
     }
     printf("\n");
@@ -129,30 +118,26 @@ int main()
     double *result3 = malloc(n * sizeof(double));
     double *result4 = malloc(n * sizeof(double));
 
+    matrix unit_matrix = {nx, ny, A};
+
     for (int i = 0; i < nx; i++)
     {
       for (int j = 0; j < ny; j++)
       {
         if (i == j)
-        {
-            set_matrix_element(A, 1.0, n, i, j);
-        }
+            set_matrix_element(unit_matrix, 1.0, i, j);
         else
-        {
-            set_matrix_element(A, 0.0, n, i, j);
-        }
+            set_matrix_element(unit_matrix, 0.0, i, j);
       }
     }
 
     for (int i = 0; i < n; i++)
-    {
         x[i] = 1.0;
-    }
 
     puts("Identity matrix:");
-    print_matrix(A, nx, ny);
+    print_matrix(unit_matrix);
 
-    matrix_multiplication(A, x, b, n);
+    matrix_multiplication(unit_matrix, x, b);
 
     puts("Vector of free members:");
     print_array(b, n);
@@ -163,7 +148,7 @@ int main()
 
     while (eps > 1e-3)
     {
-        matrix_multiplication(A, xn, result1, n);
+        matrix_multiplication(unit_matrix, xn, result1);
         subtract_vectors(result1, b, result2, n);
         scalar_multiplication(result2, tau, n);
         subtract_vectors(xn, result2, xn1, n);

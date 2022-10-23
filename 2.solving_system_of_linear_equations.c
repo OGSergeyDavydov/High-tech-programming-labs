@@ -6,33 +6,32 @@ typedef struct
 {
     int nx;
     int ny;
-    double *matrix;
+    double *arr;
 } matrix;
 
 void set_matrix_element(matrix mat, double value, int i, int j)
 {
-    mat.matrix[i*mat.nx + j] = value;
+    mat.arr[i*mat.nx+j] = value;
 }
 
 double get_matrix_element(matrix mat, int i, int j)
 {
-    return mat.matrix[i*mat.nx + j];
+    return mat.arr[i*mat.nx+j];
 }
 
 double dot_product(double *vector_a, double *vector_b, int size)
 {
-    double result = 0.0;
-
+    double product = 0.0;
     for (int i = 0; i < size; i++)
-        result += vector_a[i] * vector_b[i];
+        product += vector_a[i] * vector_b[i];
 
-    return result;
+    return product;
 }
 
-void matrix_multiplication(matrix mat, double *vector, double *result)
+void matrix_multiplication(matrix mat, double *vector,
+double *result)
 {
-    double *temp = malloc(mat.nx * sizeof(double));
-
+    double *temp = malloc(mat.nx*sizeof(double));
     for (int i = 0; i < mat.nx; i++)
     {
         for(int j = 0; j < mat.ny; j++)
@@ -49,7 +48,8 @@ void scalar_multiplication(double *vector, double scalar, int size)
         vector[i] *= scalar;
 }
 
-void subtract_vectors(double *vector_a, double *vector_b, double *result, int size)
+void subtract_vectors(double *vector_a, double *vector_b,
+double *result, int size)
 {
     for (int i = 0; i < size; i++)
         result[i] = vector_a[i] - vector_b[i];
@@ -68,23 +68,21 @@ void print_array(double *array, int size)
     printf("\n");
 }
 
-double find_max_element(double *array, int size)
+double find_max(double *array, int size)
 {
     double max = array[0];
-
     for (int i = 1; i < size; i++)
     {
         if (array[i] > max)
             max = array[i];
     }
-
     return max;
 }
 
-void swap_array_elements(double *new_array, double *initial_array, int size)
+void swap_arrays(double *new_array, double *old_array, int size)
 {
     for (int i = 0; i < size; i++)
-        new_array[i] = initial_array[i];
+        new_array[i] = old_array[i];
 }
 
 void print_matrix(matrix mat)
@@ -107,22 +105,22 @@ int main()
     double tau = 0.01;
     int num_iter = 0;
 
-    double *A = malloc(nx * ny * sizeof(double));
-    double *b = malloc(n * sizeof(double));
-    double *x = malloc(n * sizeof(double));
-    double *xn = malloc(n * sizeof(double));
-    double *xn1 = malloc(n * sizeof(double));
+    double *A = malloc(nx*ny*sizeof(double));
+    double *b = malloc(n*sizeof(double));
+    double *x = malloc(n*sizeof(double));
+    double *xn = malloc(n*sizeof(double));
+    double *xn1 = malloc(n*sizeof(double));
 	
-    double *result1 = malloc(n * sizeof(double));
-    double *result2 = malloc(n * sizeof(double));
-    double *result3 = malloc(n * sizeof(double));
-    double *result4 = malloc(n * sizeof(double));
+    double *result1 = malloc(n*sizeof(double));
+    double *result2 = malloc(n*sizeof(double));
+    double *result3 = malloc(n*sizeof(double));
+    double *result4 = malloc(n*sizeof(double));
 
     matrix unit_matrix = {nx, ny, A};
 
-    for (int i = 0; i < nx; i++)
+    for (int i = 0; i < unit_matrix.nx; i++)
     {
-      for (int j = 0; j < ny; j++)
+      for (int j = 0; j < unit_matrix.ny; j++)
       {
         if (i == j)
             set_matrix_element(unit_matrix, 1.0, i, j);
@@ -155,11 +153,11 @@ int main()
 
         subtract_vectors(xn, xn1, result4, n);
         array_abs(result4, n);
-        eps = find_max_element(result4, n);
+        eps = find_max(result4, n);
 
         num_iter++;
         
-        swap_array_elements(xn, xn1, n);
+        swap_arrays(xn, xn1, n);
 
         printf("%d. %g\n", num_iter, eps);
     }

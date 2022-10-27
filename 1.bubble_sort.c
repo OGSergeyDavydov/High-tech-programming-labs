@@ -12,7 +12,7 @@ int ascending)
     {
         for (int j = i + 1; j < array_lenght; j++)
         {
-            if (ascending >= 1)
+            if (ascending > 0)
             {
                 if (array[i] > array[j])
                 {

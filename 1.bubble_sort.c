@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#define size 1000
+#define SIZE 1000
 #define MAX 100
 
 void int_bubble_sort(int *array, int array_lenght,
@@ -36,7 +36,6 @@ void str_bubble_sort(char array[][MAX], int array_lenght,
 int ascending)
 {
     char temp[array_lenght];
-
     for (int i = 0; i < array_lenght; i++)
     {
         for (int j = i + 1; j < array_lenght; j++)
@@ -63,7 +62,7 @@ int ascending)
 
 int main()
 {
-    int *numbers = malloc(size * sizeof(int));
+    int *numbers = malloc(SIZE * sizeof(int));
     char books[][MAX] = {
     "AnnaKarenina", "WutheringHeights", "JaneEyre",
     "TheBrothersKaramazov", "TheGreatGatsby",
@@ -73,15 +72,15 @@ int main()
     int n = sizeof(books) / sizeof(books[0]);
 
     srand(time(NULL));
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < SIZE; i++)
         numbers[i] = rand() % 50000 + 1;
 
     puts("Sorted array of integers:");
-    int_bubble_sort(numbers, size, -1);
+    int_bubble_sort(numbers, SIZE, -1);
 
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < SIZE; i++)
         printf("%d\n", numbers[i]);
-    
+
     printf("\n");
 
     puts("Sorted array of strings:");
@@ -89,6 +88,6 @@ int main()
 
     for (int i = 0; i < n; i++)
         printf("%s\n", books[i]);
-    
+
     return 0;
 }

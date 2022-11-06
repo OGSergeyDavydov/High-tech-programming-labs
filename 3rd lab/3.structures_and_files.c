@@ -184,16 +184,51 @@ int main()
     FILE *pFile= fopen("b.txt", "rt");
     student test[STUDENTS_LEN];
 
+    if (pFile == NULL)
+        return 1;
+
     for (int i = 0; i < STUDENTS_LEN; i++)
         fread(&test[i], sizeof(student), 1, pFile);
+/*
+    for (int i = 0; i < STUDENTS_LEN; i++)
+    {   
+        fwrite(&students[i].full_name, 50, 1, pFile);
+        fwrite(&students[i].group, 50, 1, pFile);
+        fwrite(&students[i].date, sizeof(data), 1, pFile);
+    }
+*/  
 
     for (int i = 0; i < STUDENTS_LEN; i++)
     {
-        printf("%d. %s, %s.%s.%s, %s\n", i+1, test[i].full_name, test[i].date.day, 
+        printf("%d. %-15s, %s.%s.%s, %s\n", i+1, test[i].full_name, test[i].date.day, 
         test[i].date.month, test[i].date.year, test[i].group);
     }
 
+    printf("\n");
     fclose(pFile);
-    
+
+    // Task 5
+    FILE *file = fopen("test.bin", "rb");
+    product shop1[SHOP_LEN]; 
+
+    if (file == NULL)
+        return 1;
+/*    
+    for (int i = 0; i < SHOP_LEN; i++)
+        fwrite(&shop[i], sizeof(product), 1, file);
+*/
+    for (int i = 0; i < SHOP_LEN; i++)
+        fread(&shop1[i], sizeof(product), 1, file);
+
+    printf("List of products:\n");
+    for (int i = 0; i < SHOP_LEN; i++)
+        printf("Product %d - %-7s, %g, %d\n", i+1, shop1[i].name,
+        shop1[i].cost, shop1[i].count);
+
+    printf("\n");
+    fclose(file);
+
+    // Task 6
+
     return 0;
 }

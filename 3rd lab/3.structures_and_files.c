@@ -3,6 +3,7 @@
 #include <math.h>
 #define SHOP_LEN 3
 #define STUDENTS_LEN 3
+#define ROWS 7
 
 typedef struct
 {
@@ -30,6 +31,16 @@ typedef struct
     float real;
     float imaginary;
 } complex_number;
+
+typedef struct
+{
+    char name[50];
+    char breed[50];
+    char color[50];
+    double height;
+    double weight;
+    char birthday[50];
+} csv_row;
 
 void add_complex_numbers(complex_number a, complex_number b,
 complex_number *res, int param)
@@ -229,6 +240,40 @@ int main()
     fclose(file);
 
     // Task 6
+    FILE *dog_file = fopen("dogs.txt", "rt");
+    if (dog_file == NULL)
+        return 1;
+
+    csv_row row_0 = {"Bella", "Labrador", "Brown", 56, 24, "2013-07-01"};
+    csv_row row_1 = {"Charlie", "Poodle", "Black", 43, 24, "2016-09-16"};
+    csv_row row_2 = {"Lucy", "Chow Chow", "Brown", 46, 24, "2014-08-25"};
+    csv_row row_3 = {"Cooper", "Schnauzer", "Gray", 49, 17, "2011-12-11"};
+    csv_row row_4 = {"Max", "Labrador", "Black", 59, 29, "2017-01-20"};
+    csv_row row_5 = {"Stella", "Chihuahua", "Tan", 18, 2, "2015-04-20"};
+    csv_row row_6 = {"Bernie", "St. Bernard", "White", 77, 74, "2018-02-27"};
+
+    csv_row dogs_csv[ROWS] = {row_0, row_1, row_2, row_3, row_4, row_5, row_6};
+    csv_row new[ROWS];
+
+    for (int i = 0; i < ROWS; ++i)
+        fread(&new[i], sizeof(csv_row), 1, dog_file);
+/*
+    for (int i = 0; i < ROWS; ++i)
+        fwrite(&dogs_csv[i], sizeof(csv_row), 1, dog_file);
+*/
+
+    puts("Csv file of dogs:\n");
+    for (int i = 0; i < ROWS; ++i)
+        printf("%-d. %-15s %-15s %-15s %-11g %-11g %-11s\n", i, dogs_csv[i].name, dogs_csv[i].breed,
+            dogs_csv[i].color, dogs_csv[i].height, dogs_csv[i].weight, dogs_csv[i].birthday);
+
+/*
+    puts("Csv file of dogs:\n");
+    for (int i = 0; i < ROWS; ++i)
+        printf("%-d. %-15s %-15s %-15s %-11g %-11g %-11s\n", i, new[i].name, new[i].breed,
+            new[i].color, new[i].height, new[i].weight, new[i].birthday);
+*/
+    fclose(dog_file);
 
     return 0;
 }
